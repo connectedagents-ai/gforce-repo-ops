@@ -1,0 +1,20 @@
+{
+  "name": "github_ops",
+  "version": "1.0.0",
+  "description": "GitHub repository operations: PRs, issues, CI status, code search, and automation",
+  "author": "G Force Ops",
+  "triggers": [
+    "github", "pr", "pull request", "issue", "ci", "workflow", "actions",
+    "review", "merge", "branch", "commit", "code search", "repo"
+  ],
+  "examples": [
+    "Review PR #42",
+    "What issues are open in gforce-repo-ops?",
+    "Check CI status on main",
+    "Search for 'gripper' in the codebase",
+    "Create an issue: title='Bug in router', body='...'",
+    "Trigger the lint workflow on dev branch"
+  ],
+  "permissions": ["network"],
+  "env": ["GITHUB_TOKEN", "GITHUB_ORG", "GITHUB_DEFAULT_REPO"]
+}

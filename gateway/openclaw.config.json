@@ -1,0 +1,128 @@
+{
+  "workspace": "gforce",
+  "persona": "gforce",
+  "description": "G Force Operations Agent — AI that manages repos, hardware, and energy operations",
+
+  "model": {
+    "backend": "openai-compatible",
+    "baseUrl": "${OPENCLAW_MODEL_BACKEND:-http://localhost:9000/v1}",
+    "model": "auto",
+    "apiKey": "${OPENROUTER_API_KEY}",
+    "maxTokens": 4096,
+    "temperature": 0.7
+  },
+
+  "platforms": {
+    "telegram": {
+      "enabled": true,
+      "token": "${TELEGRAM_BOT_TOKEN}",
+      "allowedUsers": []
+    },
+    "discord": {
+      "enabled": true,
+      "token": "${DISCORD_BOT_TOKEN}",
+      "prefix": "!gforce"
+    },
+    "slack": {
+      "enabled": true,
+      "botToken": "${SLACK_BOT_TOKEN}",
+      "appToken": "${SLACK_APP_TOKEN}"
+    },
+    "whatsapp": {
+      "enabled": true,
+      "token": "${WHATSAPP_TOKEN}",
+      "phoneNumberId": "${WHATSAPP_PHONE_NUMBER_ID}"
+    },
+    "signal": {
+      "enabled": false,
+      "phoneNumber": "${SIGNAL_PHONE_NUMBER}"
+    }
+  },
+
+  "skills": [
+    {
+      "name": "github_ops",
+      "path": "./skills/github_ops",
+      "enabled": true,
+      "description": "GitHub repository operations: PRs, issues, CI status, code search"
+    },
+    {
+      "name": "gripper_control",
+      "path": "./skills/gripper_control",
+      "enabled": true,
+      "description": "OpenClaw gripper hardware control via Raspberry Pi bridge"
+    },
+    {
+      "name": "energy_ops",
+      "path": "./skills/energy_ops",
+      "enabled": true,
+      "description": "Power Connection and ERCOT energy platform operations"
+    }
+  ],
+
+  "mcp": {
+    "servers": [
+      {
+        "name": "github",
+        "command": "python",
+        "args": ["-m", "agents.mcp_servers.github_mcp"],
+        "cwd": "../",
+        "env": {
+          "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+        }
+      },
+      {
+        "name": "gripper",
+        "command": "python",
+        "args": ["-m", "agents.mcp_servers.gripper_mcp"],
+        "cwd": "../",
+        "env": {
+          "PI_HOST": "${PI_HOST}",
+          "PI_GRIPPER_PORT": "${PI_GRIPPER_PORT:-8080}",
+          "PI_MAX_FORCE": "${PI_MAX_FORCE:-80}"
+        }
+      }
+    ]
+  },
+
+  "memory": {
+    "enabled": true,
+    "backend": "local",
+    "maxItems": 500,
+    "persistPath": "~/.openclaw/gforce/memory"
+  },
+
+  "heartbeat": {
+    "enabled": true,
+    "intervalMinutes": 60,
+    "message": "G Force Ops System is running ✅"
+  },
+
+  "crons": [
+    {
+      "name": "github_ci_monitor",
+      "schedule": "*/15 * * * *",
+      "description": "Check GitHub CI status every 15 minutes and alert on failures",
+      "skill": "github_ops",
+      "action": "monitor_ci"
+    },
+    {
+      "name": "system_health",
+      "schedule": "0 * * * *",
+      "description": "Hourly system health check",
+      "skill": null,
+      "action": "health_check"
+    }
+  ],
+
+  "safety": {
+    "requireConfirmation": ["gripper_control"],
+    "blocklist": ["rm -rf", "DROP TABLE", "DELETE FROM"],
+    "maxToolCallsPerMessage": 5
+  },
+
+  "logging": {
+    "level": "${LOG_LEVEL:-INFO}",
+    "file": "logs/openclaw.log"
+  }
+}

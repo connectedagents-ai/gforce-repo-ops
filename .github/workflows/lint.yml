@@ -1,0 +1,43 @@
+name: Lint & Type Check
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Ruff + MyPy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install dependencies
+        run: |
+          cd agents
+          uv sync
+
+      - name: Lint with ruff
+        run: |
+          cd agents
+          uv run ruff check . --output-format=github
+
+      - name: Type check with mypy
+        run: |
+          cd agents
+          uv run mypy --strict . --ignore-missing-imports
+
+      - name: Lint hardware bridge
+        run: |
+          cd hardware/gripper_bridge
+          uv sync
+          uv run ruff check . --output-format=github

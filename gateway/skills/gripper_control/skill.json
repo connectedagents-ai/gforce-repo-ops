@@ -1,0 +1,22 @@
+{
+  "name": "gripper_control",
+  "version": "1.0.0",
+  "description": "OpenClaw robotic gripper hardware control via Raspberry Pi MCP bridge",
+  "author": "G Force Ops",
+  "triggers": [
+    "gripper", "claw", "open gripper", "close gripper", "pick up", "grab",
+    "release", "gripper force", "gripper status", "gripper position"
+  ],
+  "examples": [
+    "Open the gripper",
+    "Close the gripper",
+    "Close gripper at 60% force",
+    "Move gripper to 50%",
+    "What's the gripper status?",
+    "Set gripper force to 75"
+  ],
+  "permissions": ["network"],
+  "env": ["PI_HOST", "PI_GRIPPER_PORT", "PI_MAX_FORCE", "PI_GRIPPER_API_KEY"],
+  "requireConfirmation": true,
+  "confirmationMessage": "⚠️ This will control physical hardware. Confirm?"
+}
