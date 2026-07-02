@@ -1,4 +1,4 @@
-# ⚡ G Force Repo Operations System
+> **MOVED** → This repository has moved to [Connected-Energy-AI/gforce-repo-ops](https://github.com/Connected-Energy-AI/gforce-repo-ops)# ⚡ G Force Repo Operations System
 
 > Multi-agent, multi-LLM operations hub wiring together OpenClaw, Hermes Agent, and a full AI model router across all platforms and hardware.
 
