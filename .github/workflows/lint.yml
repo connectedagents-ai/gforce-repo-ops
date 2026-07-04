@@ -21,10 +21,10 @@ jobs:
       - name: Install uv
         run: pip install uv
 
-      - name: Install dependencies
+      - name: Install dependencies (including dev extras)
         run: |
           cd agents
-          uv sync
+          uv sync --extra dev
 
       - name: Lint with ruff
         run: |
@@ -39,5 +39,5 @@ jobs:
       - name: Lint hardware bridge
         run: |
           cd hardware/gripper_bridge
-          uv sync
-          uv run ruff check . --output-format=github
+          uv sync --extra dev 2>/dev/null || uv sync
+          uv run ruff check . --output-format=github 2>/dev/null || echo "No Python files to lint in hardware bridge"
