@@ -25,15 +25,14 @@ jobs:
       - name: Install uv
         run: pip install uv
 
-      - name: Install dependencies
+      - name: Install dependencies (including dev extras for pytest)
         run: |
           cd agents
-          uv sync --all-extras
+          uv sync --extra dev --all-extras
 
       - name: Run tests (network-blocked)
         env:
           ENVIRONMENT: test
-          # All real API keys are mocked in tests
           OPENROUTER_API_KEY: test_key_mock
           GITHUB_TOKEN: test_token_mock
           PI_HOST: localhost
