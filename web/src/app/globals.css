@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg-base: #08090a;
+  --color-bg-raised: #0f1011;
+  --color-bg-overlay: #16181a;
+  --color-bg-elevated: #1d2023;
+  --color-bg-active: #252a2e;
+
+  --color-text-primary: #e5e6e8;
+  --color-text-secondary: #9a9da3;
+  --color-text-tertiary: #6b6f76;
+  --color-text-quaternary: #45484f;
+
+  --color-border-default: #22262a;
+  --color-border-strong: #2e3338;
+
+  --color-accent-primary: #5e6ad2;
+  --color-accent-hover: #6e7ae2;
+
+  --color-status-todo: #9a9da3;
+  --color-status-in-progress: #f2c94c;
+  --color-status-done: #5e6ad2;
+  --color-status-cancelled: #45484f;
+  --color-status-blocked: #eb5757;
+
+  --color-background: var(--color-bg-base);
+  --color-foreground: var(--color-text-primary);
+
+  --font-sans: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif-display: "Tiempos Headline", Georgia, "Times New Roman", serif;
+  --font-mono: "GeistMono", "Fira Code", "Cascadia Code", monospace;
+
+  --text-mini-size: 0.6875rem;
+  --text-small-size: 0.75rem;
+  --text-regular-size: 0.8125rem;
+  --text-large-size: 0.875rem;
+  --text-xlarge-size: 1rem;
+  --text-display-size: 1.5rem;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-bg-base);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}

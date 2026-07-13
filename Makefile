@@ -84,7 +84,8 @@ hermes: ## Configure and start Hermes Agent
 	@hermes gateway
 
 dashboard: ## Start web dashboard (dev server)
-	cd web && $(NPM) run dev
+	npm install --prefix web
+	cd web && ./node_modules/.bin/next dev
 
 # ── Hardware ─────────────────────────────────────────────────
 

@@ -81,6 +81,13 @@
           "PI_GRIPPER_PORT": "${PI_GRIPPER_PORT:-8080}",
           "PI_MAX_FORCE": "${PI_MAX_FORCE:-80}"
         }
+      },
+      {
+        "name": "energy",
+        "command": "python",
+        "args": ["-m", "agents.mcp_servers.energy_mcp"],
+        "cwd": "../",
+        "env": {}
       }
     ]
   },

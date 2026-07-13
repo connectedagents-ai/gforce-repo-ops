@@ -29,8 +29,8 @@ from fastapi.security.api_key import APIKeyHeader
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from .gripper import GripperController
-from .safety import SafetyMiddleware
+from gripper import GripperController
+from safety import SafetyMiddleware
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 

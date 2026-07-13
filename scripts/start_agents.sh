@@ -16,7 +16,7 @@ cd "$REPO_ROOT/agents"
 uv run uvicorn router.main:app \
   --host "${ROUTER_HOST:-0.0.0.0}" \
   --port "${ROUTER_PORT:-9000}" \
-  --log-level "${LOG_LEVEL:-info}" \
+  --log-level "$(echo "${LOG_LEVEL:-info}" | tr '[:upper:]' '[:lower:]')" \
   >> "$LOG_DIR/router.log" 2>&1 &
 
 ROUTER_PID=$!

@@ -29,14 +29,31 @@ from .config import (
     get_all_models,
     get_model_for_task,
 )
+from .cms import inject_constitutional_context
 
 log = structlog.get_logger()
 settings = RouterSettings()
+
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import FastAPI, HTTPException, Request, Security, Depends
+
+security = HTTPBearer()
+
+def verify_token(credentials: HTTPAuthorizationCredentials = Security(security)):
+    expected_token = os.environ.get("GFORCE_API_TOKEN", "gforce-dev-token")
+    if credentials.credentials != expected_token:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid authentication token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return credentials.credentials
 
 app = FastAPI(
     title="G Force Multi-LLM Router",
     description="Task-based LLM routing: Mercury Hermes · Hermes 3 · Gemini · Claude · GPT-4o",
     version="0.1.0",
+    dependencies=[Depends(verify_token)],
 )
 
 app.add_middleware(
@@ -45,6 +62,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+from .workflows import router as workflows_router
+app.include_router(workflows_router)
 
 
 # ── Request / Response Models ──────────────────────────────────────────────────
@@ -153,16 +173,23 @@ async def chat_completions(
             f"Set {api_key_env} in environment.",
         )
 
-    # Build OpenAI-compatible client
+    # Build OpenAI-compatible client with identification headers
     client = AsyncOpenAI(
         base_url=model_cfg.base_url,
         api_key=api_key or "ollama",
+        default_headers={
+            "HTTP-Referer": "https://powerconnection.ai",
+            "X-Title": "Power Connection AI | G Force Router",
+        }
     )
 
     try:
         messages_payload = [
             {"role": m.role, "content": m.content} for m in request.messages
         ]
+        
+        # Inject CMS rules & memory context
+        messages_payload = inject_constitutional_context(messages_payload)
 
         if request.stream:
             # Streaming response
